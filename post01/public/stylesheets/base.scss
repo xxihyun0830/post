@@ -1,0 +1,16 @@
+body {
+    margin-top : 50px;
+    padding-top : 1em;
+    & > .main-content{
+        min-height: 400px;
+    }
+}
+
+a:hover{
+    text-decoration : none;
+    background-color : red;
+
+}
+
+.jumbotron
+
