@@ -42,8 +42,8 @@ router.get('/', catchErrors(async(req,res,next)=>{
 }));
 
 //2. GET/posts/:id :게시글 상세보기 (게시글 내용보기)
-router.get('/:id', catchError(async(req,res,next) => {
-    const post = await Post.findById(req,res,params.id).populate('name');
+router.get('/:id', catchErrors(async (req, res, next) => {
+    const post = await Post.findById(req.params.id).populate('name');
     const comments = await Comment.find({post:post.id}).populate('name');
     await post.save();
     res.render('posts/show',{post: post, comments: comments});
@@ -56,13 +56,12 @@ router.get('/new',needId,(req,res,next)=>{
 });
 
 //4. POST/posts : 게시글 생성
-router.post('/', needId, catchError(async(req, res, next)=>{
+router.post('/', needId, catchErrors(async(req, res, next)=>{
     const user = req.session.user;
     var post = new Post({
-        id = user._email, //로그인은 name, email, pw로 하는데, email은 PK
-        title = req.body.title,
-        content = req.body.content,
-        name = user._name
+        title : req.body.title,
+        name : user._id,
+        content : req.body.content,
     });
     await post.save();
     req.flash('success', 'Successfully posted!. 새로운 게시글 작성 완료');
@@ -70,11 +69,11 @@ router.post('/', needId, catchError(async(req, res, next)=>{
 }));
 
 //5. DELETE/posts/:id : 게시글 삭제
-router.delete('/:id',needId,cathchError(async(req,res,next)=> {
+router.delete('/:id' , needId , catchErrors(async (req , res , next)=> {
     await Post.findOneAndRemove({_id: req.params.id});
     req.flash('success', 'Successfully deleted');
     res.redirect('/posts');
-}))
+}));
 
 // + 추가 기능) 6. GET/posts/:id/edit : 게시글 수정
 router.get('/:id/edit',needId, catchErrors(async(req, res, next)=>{
@@ -103,7 +102,7 @@ router.put('/:id',catchErrors(async(req, res, next)=>{
 
 
 // + 추가 기능)  7. 댓글 달기
-router.post('/:id/comments', needId, catchError(async(req, res, next)=>{
+router.post('/:id/comments', needId, catchErrors(async(req, res, next)=>{
     const question = await Post.findById(req.params.id);
 
     if(!post){
