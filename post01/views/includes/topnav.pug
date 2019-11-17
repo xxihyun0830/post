@@ -1,3 +1,30 @@
 .header.clearfix
   nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
-  
+     .container
+        a.navbar-brand(href="/") wp-HW07-Post Board
+        button.navbar-toggle(
+            type="button", 
+            data-toggle = "collapse",
+            date-targer = "#navbarsExampleDefault",
+            aria-controls = "navbarsExampleDefault",
+            aria-expended = "false",
+            aria-label = "Toggle navigation")
+           span.navbar-toggle-icon
+
+        #navbarsExampleDefault.collapse.navbar-collapse
+          ul.navbar-nav.ml-auto
+            li.nav-item
+                a.nav-link(href="/posts") post
+            li.nav-item
+                a.nav-link(href = "/users") Users
+            if (!currentUser)
+                li.nav-item
+                  a.nav-link(href = '/signin') Log-in
+                li.nav-item
+                  a.nav-link(href = '/users/new') 회원가입하기
+            else
+                li.nav-item
+                  a.nav-link(href=`/users/${currentUser._id}`) My page
+                li.nav-item
+                  a.nav-link(href='/signout') Log-out
+
