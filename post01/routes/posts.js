@@ -7,21 +7,20 @@ const catchErrors = require('../lib/async-error');
 const router = express.Router();
 
 // 게시판을 이용하기 위해서는 로그인을 해야 함.
-// function needId(req, res, next){
-//     if(req.session.user){
-//         next();
-//     }else{
-//         req.flash('danger', 'Please singin first! 로그인 후, 게시판 이용이 가능합니다.');
-//         res.redirect('/signin');
-//     }
-// }
+function needId(req, res, next){
+    if(req.session.user){
+        next();
+    }else{
+        req.flash('danger', 'Please singin first! 로그인 후, 게시판 이용이 가능합니다.');
+        res.redirect('/signin');
+    }
+}
 
 // 1.GET/post : 게시판 목록보기
 router.get('/', catchErrors(async(req,res,next)=>{
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 3;
-    // pagination을 확인하기 위해서 1페이지당 3개 게시글이 올라오게 함
-
+    const limit = parseInt(req.query.limit) || 10;
+    
     var query = {};
     const term = req.query.term;
 
@@ -52,15 +51,9 @@ router.get('/:id', catchError(async(req,res,next) => {
 
 
 //3. GET/posts/new : 게시글 쓰기 페이지
-router.get('/new',(req,res,next)=>{
+router.get('/new',needId,(req,res,next)=>{
     res.render('posts/new', {post:{}});
 });
-
-// 3-1. 게시글을 쓸 때 로그인이 필요한 경우
-// router.get('/new', needId, (req,res,next)=>{
-//     res.render('posts/new', {post:{}});
-// });
-
 
 //4. POST/posts : 게시글 생성
 router.post('/', needId, catchError(async(req, res, next)=>{
@@ -77,19 +70,40 @@ router.post('/', needId, catchError(async(req, res, next)=>{
 }));
 
 //5. DELETE/posts/:id : 게시글 삭제
+router.delete('/:id',needId,cathchError(async(req,res,next)=> {
+    await Post.findOneAndRemove({_id: req.params.id});
+    req.flash('success', 'Successfully deleted');
+    res.redirect('/posts');
+}))
 
-//6. GET/posts/:id/edit : 게시글 수정
-router.get('/:id/edit', catchErrors(async(req, res, next)=>{
+// + 추가 기능) 6. GET/posts/:id/edit : 게시글 수정
+router.get('/:id/edit',needId, catchErrors(async(req, res, next)=>{
     const post = await Post.findById(req.params.id);
     res.render('posts/edit', {post:post});
 }));
 
-//6-1. PUT/posts/:id/update : 게시글 수정 내용을 게시판에 적용
+// + 추가 기능)  6-1. PUT/posts/:id/update : 게시글 수정 내용을 게시판에 적용
+
+  //확실하지 않음..확인해봐야 함
+router.put('/:id',catchErrors(async(req, res, next)=>{
+    const post = await Post.findById(req.params.id);
+
+    if(!post){
+        req.flash('danger', 'Not exist post');
+        return res.redirect('back');
+    }
+
+    post.title = req.body.title;
+    post.content = req.body.content;
+
+    await post.save();
+    req.flash('success', 'Successfully updated');
+    res.redirect('/posts');
+}));
 
 
-//8. 댓글 달기
+// + 추가 기능)  7. 댓글 달기
 router.post('/:id/comments', needId, catchError(async(req, res, next)=>{
-    const user = req.session.user;
     const question = await Post.findById(req.params.id);
 
     if(!post){
@@ -98,7 +112,17 @@ router.post('/:id/comments', needId, catchError(async(req, res, next)=>{
     }
 
     var comment = new Comment({
-        id: user._email,
-        post : post._id
-    })
-}))
+        name : user._id, 
+        post : post._id,
+        content: req.body.content
+        
+    });
+    await comment.save();
+    await post.save();
+
+    req.flash('success', 'Successfully commented');
+    res.redirect('/posts/${req.params.id}');
+
+}));
+
+module.exports = router;
