@@ -5,7 +5,11 @@ The file will have its original line endings in your working directory
   
  
   git config --global core.autocrlf true
+  
   git add -A
+  
   git commit -m "---"
+  
   git push -u origin master
+  
   
