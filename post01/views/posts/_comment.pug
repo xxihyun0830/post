@@ -1,0 +1,12 @@
+.comment.card
+    .card-body
+      .content = comment.content
+      //- 여기가 강의 코드랑 다름..
+    .row.card-body
+      .col-sm
+      .col-sm.text-right
+        .name
+          |  comment on #{moment(comment.reg_date).format('YYYY-MM-DD')}
+          if comment.name
+            |
+            | by #[a(href=`/users/${comment.name.id}`)= comment.name.name]

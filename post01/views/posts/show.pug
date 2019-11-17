@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .container
+    h1.main-title = post.title
+    .post.show
+    include _post
+      .buttons
+        a.btn.btn-outline-secondary(href=`/posts/${post.id}/edit`) Edit
+        |
+        a.btn.btn-outline-danger.delete-btn(href="#", data-url=`/posts/${post.id}?_method=delete`) Delete
+    if post.numComments > 0
+       hr
+       h3 #{post.numComments} Comment(s)
+       .comment.show
+          each comment in comments
+             include _comment
+    form(action=`/posts/${post.id}/comments`,method='POST')
+       .form-group
+          label(for='comment') Your comments
+          textarea.form-control(name="content", rows = "5")
+        button.btn.btn-primary(type="submit") Post Your comments
+script.
+  $(function(){
+      $('.delete-btn').click(function(){
+          if(confirm('정말 삭제하시겠습니까')){
+              location = $(this).data('url');
+          }
+          return false;
+      });
+  });

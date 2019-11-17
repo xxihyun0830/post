@@ -1,0 +1,28 @@
+.main-title{
+    .small{
+        float : right;
+        font-size : 1rem;
+        color : white;
+    }
+}
+
+.post{
+   .title{
+       font-size : 1.3rem;
+   }
+   
+}
+
+.posts{
+    .content{
+        max-height : 5em;
+        overflow : hidden;
+        
+    }
+}
+
+.show{
+    .content{
+        while-space : pre-wrap;
+    }
+}

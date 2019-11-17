@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  .container
+    h1.main-title New Post
+    form(action="/posts",method = "POST")
+       include _form
+       button.btn.btn-outline-primary(type="submit") Upload your New Post
