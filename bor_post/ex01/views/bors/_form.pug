@@ -1,0 +1,6 @@
+.form-group
+  label(for="title") Title
+  input.form-control(type="text", name="title", placeholder="What's your bor?", value=bor.title)
+.form-group
+  label(for="bor") Board
+  textarea.form-control(name="content", rows="5")= bor.content

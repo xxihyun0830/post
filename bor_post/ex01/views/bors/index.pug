@@ -1,0 +1,29 @@
+extends ../layout
+
+include ../includes/_paginate
+
+block content
+  .container
+    form.form-inline.search-input-group(action='/bors', method='GET')
+      i.fa.fa-search
+      input.form-control.mr-sm-2(type='text', name='term', placeholder='Search', aria-label='Search', value=term)
+
+    h1.main-title 
+      | board
+      if bors.total > 0
+        .small Total #{bors.total} bor(s)
+
+    if bors.total <= 0 
+      .alert.alert-info No bors available yet
+    else
+      .bors
+        each bor in bors.docs
+          .bor
+            a.title(href=`/bors/${bor.id}`)= bor.title
+            include _bor
+            
+
+      +paginate(bors, '/bors', query)
+
+    hr
+    a.btn.btn-primary(href='/bors/new') Upload New Board

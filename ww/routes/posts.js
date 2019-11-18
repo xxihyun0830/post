@@ -1,6 +1,5 @@
 const express = require('express');
 const Post= require('../models/post');
-// const User = require('../models/user'); 
 const Answer = require('../models/answer'); 
 const catchErrors = require('../lib/async-error');
 
@@ -37,18 +36,20 @@ router.get('/new', (req, res, next) => {
 
 //게시글 수정하기  -> view > post > edit.pug
 router.get('/:id/edit', catchErrors(async (req, res, next) => {
-  const post = await Post.findById(req.params.id);
-  res.render('posts/edit', {post: post});
+  const post = await Post.find({_id:req.params.id});
+  req.flash('success','게시글 수정 완료! ');
+  res.render('posts/edit',{post : post});
 }));
 
 // 게시글 전체 목록 보기
 router.get('/:id', catchErrors(async (req, res, next) => {
-  const post = await Post.findById(req.params.id).populate('name');
-  const answers = await Answer.find({post: post.id}).populate('name');
-  post.numReads++;    // TODO: 동일한 사람이 본 경우에 Read가 증가하지 않도록???
+  const post = await Post.findOne({_id:req.params.id}).populate('name');
+  const answers = await Answer.find({post: post.id}).populate('name'); //
+  post.numReads++;    
   await post.save();
   res.render('posts/show', {post: post, answers: answers});
 }));
+~~
 
 //게시글 update
 router.put('/:id', catchErrors(async (req, res, next) => {
@@ -74,7 +75,7 @@ router.delete('/:id', catchErrors(async (req, res, next) => {
 }));
 
 //게시글 올리기 
-router.post('/', catchErrors(async (req, res, next) => {
+router.post('/new', catchErrors(async (req, res, next) => {
   
   var post = new Post({
     title: req.body.title,
@@ -83,13 +84,13 @@ router.post('/', catchErrors(async (req, res, next) => {
   });
   await post.save();
   req.flash('success', 'Successfully posted');
-  res.redirect('/posts');
+  res.redirect('/');
 }));
 
 //댓글달기
 router.post('/:id/answers',  catchErrors(async (req, res, next) => {
   
-  const post = await Post.findById(req.params.id);
+  const post = await Post.find(req.params.id);
 
   if (!post) {
     req.flash('danger', 'Not exist post');
@@ -97,8 +98,7 @@ router.post('/:id/answers',  catchErrors(async (req, res, next) => {
   }
 
   var answer = new Answer({
-    name: req.body.name,
-    post: post._id,
+    post: post._id, 
     content: req.body.content
   });
   await answer.save();
@@ -106,9 +106,7 @@ router.post('/:id/answers',  catchErrors(async (req, res, next) => {
   await post.save();
 
   req.flash('success', 'Successfully answered');
-  res.redirect('/posts/${req.params.id}');
+  res.redirect('/posts/${req.params.id}'); //댓글 오류가 생기는 ㅂ
 }));
-
-
 
 module.exports = router;

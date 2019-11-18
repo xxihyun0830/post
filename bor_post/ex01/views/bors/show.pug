@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  .container
+    h1.main-title= bor.title
+
+    .bor.show
+    include _bor
+
+      .buttons
+        a.btn.btn-outline-secondary(href=`/bors/${bor.id}/edit`) Edit
+        | 
+        a.btn.btn-outline-danger.delete-btn(href="#", data-url=`/bors/${bor.id}?_method=delete`) Delete
+      
+    if bor.numAnswers > 0
+      hr
+      h3 #{bor.numAnswers} Answer(s)
+      
+    .answers.show
+      each answer in answers
+        include _answer
+
+    form(action=`/bors/${bor.id}/answers`, method='POST')
+      .form-group
+        label(for='answer') Your Comments
+        textarea.form-control(name="content", rows="5")
+      button.btn.btn-primary(type="submit") Post Your Comments
+
+  script.
+    $(function() {
+      $('.delete-btn').click(function() {
+        if (confirm('Are you sure to delete?')) {
+          location = $(this).data('url');
+        }
+        return false;
+      });
+    });

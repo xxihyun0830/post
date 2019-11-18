@@ -5,7 +5,7 @@ block content
     h1.main-title= post.title
 
     .post.show
-    include _post
+      include _post
 
       .buttons
         a.btn.btn-outline-secondary(href=`/posts/${post.id}/edit`) Edit
@@ -21,10 +21,9 @@ block content
 
     form(action=`/posts/${post.id}/answers`, method='POST')
       .form-group
-        label(for='answer') Your Answer
+        label(for='answer') Your Comments
         textarea.form-control(name="content", rows="5")
-      button.btn.btn-primary(type="submit") Post Your Answer
-
+      button.btn.btn-primary(type="submit") Post Your Comments
   script.
     $(function() {
       $('.delete-btn').click(function() {
