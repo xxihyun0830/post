@@ -1,6 +1,49 @@
 body {
-  margin-top : 50px;
-  padding-top: 1em;
-}
+  margin-top: 50px;
+  padding-top: 1em; }
+  body > .main-content {
+    min-height: 400px; }
+
+a:hover {
+  text-decoration: none; }
+
+.jumbotron {
+  margin-top: -1em;
+  background: url("/imges/img1.jpg") no-repeat left center;
+  color: white; }
+
+.form-actions {
+  padding: 20px;
+  margin-top: 20px;
+  backgroud-color: white; }
+
+.main-title {
+  color: blue;
+  font-size: 2.5rem; }
+
+.header > .navbar {
+  background-color: blue !important; }
+
+.form-signin {
+  width: 300px; }
+
+.form-control {
+  position: relative;
+  box-sizing: border-box; }
+
+.main-title .small {
+  float: right;
+  font-size: 1rem;
+  color: white; }
+
+.post .title {
+  font-size: 1.3rem; }
+
+.posts .content {
+  max-height: 5em;
+  overflow: hidden; }
+
+.show .content {
+  while-space: pre-wrap; }
 
 /*# sourceMappingURL=style.css.map */

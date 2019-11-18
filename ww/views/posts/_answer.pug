@@ -1,0 +1,11 @@
+.answer.card
+  
+  .card-body
+    .content= answer.content
+
+  .row.card-body
+    .col-sm
+    .col-sm.text-right
+      .name
+        | answered on #{moment(answer.reg_date).format('YYYY-MM-DD')}
+        
