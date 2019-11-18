@@ -3,8 +3,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({
-  id : {type: Number, default: 1}, //id는 게시글 번호 , 즉 글번호 
-  name: { type: Schema.Types.ObjectId}, //작성자
+  // id : {type: Number, default: 1}, //id는 게시글 번호 , 즉 글번호 
+  name: { type: Schema.Types.ObjectId}, 
   title: {type: String, trim: true, required: true},
   content: {type: String, trim: true, required: true},
   reg_date: {type: Date, default: Date.now}
